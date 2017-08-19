@@ -1,0 +1,198 @@
+why is the convergence rate different
+特征向量线性无关
+R^M ~ (rou(R))^M ?
+长波|lambda k|的值
+Gauss seidel的矩阵的特征向量和特征值
+
+2.6.3:共轭梯度方法
+
+问题：
+non-zero neumann conditions
+狄利克雷区域上的值如何确定？ 边界上的值都已经给出，非边界的狄利克雷区域不会被使用
+高层上的狄利克雷误差是不是0 是
+检验正定性 基本正定
+Smoother中迭代每一个元素的顺序要取反，那么多次迭代全部元素的顺序要不要取反呢 按照论文中的说法是要的
+使用Conjungate gradient: L真的是正定的吗 	基本是的
+在使用v-cycle做preconditioner时，为何矩阵的正定性与v－cycle的求解方式(smoother等等）相关?
+all neumann condition时，什么叫做project out null space（r bar是什么意思）
+
+all neumann condition时，什么叫做project out null space（r bar是什么意思）
+ The coarse grid is positioned in such a way that the bounding box of the domain, excluding the ghost layer of Neumann cells, aligns with cell boundaries at both resolu- tions (see Figure 2) 何意？
+边界区域如何确定？
+PT = 2 B * B * B 真的是这样吗？
+stream operations 用什么呢？
+
+non-zero neumann conditions
+为什么非全狄利克雷边界的情况就不可以在并行计算中一并处理呢？
+在使用v-cycle做preconditioner时，为何矩阵的正定性与v－cycle的求解方式(smoother等等）相关?
+
+
+
+
+傅立叶变换
+
+问题：
+
+要解的问题似乎是全Neumann边界的规则区域？这为什么还需要precondition呢
+每层的L矩阵大小缩小一半，但是实际分配给他的空间没有缩小，空间浪费
+为什么系数矩阵是＋6 －1？
+
+c吗？我先实现一个preconditioner怎么样呢
+
+本科出国毕设的那个项目的学长？
+
+
+空间上可以优化：不同层次的存储空间不停减半
+是2还是32？
+58.673 17
+去掉cg
+自动进行3次增长，记录迭代次数，每次迭代的multigrid残差，以及pcg残差，每次迭代用时（上中下），总用时
+-O3
+
+学习并行
+进行纯的multigrid（问题在于这就要求分辨率要能被2的更高次幂整除）
+
+
+询问老师：
+为什么使用A内积作为残差平方，而不使用内积
+
+80*80*80multigrid深度为5，迭代23次
+80*80*80multigrid深度为4，迭代15次
+
+80*80*80 下2.12 上2.48
+
+
+日志：
+8.18 
+80*80*80: 通过重写restrictor使得downstroke时间由2.12减少到1.16，project中迭代次数＝15，时间=74.0738
+
+通过开O2两种算法时间复杂度均得到巨大提升(128*128*128)
+	multigrid:		average project time = 2.210 (25 steps)
+	incomplete cholesky:	average project time = 1.039 (25 steps)
+
+128*128*128 O2 multigrid with original restrictor:	downstroke time = 0.16
+128*128*128 O2 multigrid with new restrictor:		downstroke time = 0.16
+开了O2之后两种方法没什么重大改变
+	
+128*128*128 O2 multigrid with new restrictor:
+	correctionFactor = 2	average project time = 5.862 iteration = 13.32 (25 steps)
+	correctionFactor = 25	average project time = 2.053 (25 steps)
+	correctionFactor = 26	average project time = 1.985 iteration = (25 steps)
+	correctionFactor = 28	average project time = 2.126 (25 steps)
+------------------DCMAKE_BUILD_TYPE=Release--------------------------------
+128*128*128 multigrid (new restrictor)
+	correctionFactor = 26 	average project time = 1.31821 iteration = 4.12 (25 steps)
+							 1.4112
+
+
+
+
+FluidSolver: step (0.1) ..
+  - Time elapsed in jacobi 0.0543243 seconds.
+  - Time elapsed in jacobi 0.0424166 seconds.
+  - Time elapsed in jacobi 0.0437011 seconds.
+  - Time elapsed in jacobi 0.0401795 seconds.
+  - Time elapsed in jacobi 0.0414892 seconds.
+  - Time elapsed in jacobi 0.0402118 seconds.
+  - Time elapsed in jacobi 0.0407242 seconds.
+  - Time elapsed in jacobi 0.0450094 seconds.
+  - Time elapsed in jacobi 0.0429674 seconds.
+  - Time elapsed in jacobi 0.0428154 seconds.
+  + PCG: Residual after 9 iterations : 9.24176e-05
+  - Time elapsed in project(): 2.75032 seconds.
+  + Advecting velocity field ..
+  - Time elapsed in advectVelocityField(): 0.456645 seconds.
+  + Advecting density field ..
+  - Time elapsed in advectDensityField(): 0.359528 seconds.
+  + Calculating forces ..
+  - Time elapsed in calcForces(): 0.468355 seconds.
+  - Time elapsed in step(): 4.04448 seconds.
+    + Saving "output/density-0001.vol"
+    + Saving "output/screenshot-0001.png"
+FluidSolver: step (0.1) ..
+  - Time elapsed in jacobi 0.0424009 seconds.
+  - Time elapsed in jacobi 0.0423284 seconds.
+  - Time elapsed in jacobi 0.0458137 seconds.
+  - Time elapsed in jacobi 0.0431151 seconds.
+  - Time elapsed in jacobi 0.0425143 seconds.
+  - Time elapsed in jacobi 0.0401424 seconds.
+  + PCG: Residual after 5 iterations : 8.42049e-05
+  - Time elapsed in project(): 1.6615 seconds.
+  + Advecting velocity field ..
+  - Time elapsed in advectVelocityField(): 0.453853 seconds.
+  + Advecting density field ..
+  - Time elapsed in advectDensityField(): 0.359315 seconds.
+  + Calculating forces ..
+  - Time elapsed in calcForces(): 0.565049 seconds.
+  - Time elapsed in step(): 3.04879 seconds.
+    + Saving "output/density-0002.vol"
+    + Saving "output/screenshot-0002.png"
+FluidSolver: step (0.1) ..
+  - Time elapsed in jacobi 0.0424233 seconds.
+  - Time elapsed in jacobi 0.0410042 seconds.
+  - Time elapsed in jacobi 0.046481 seconds.
+  - Time elapsed in jacobi 0.0413794 seconds.
+  - Time elapsed in jacobi 0.0419814 seconds.
+  - Time elapsed in jacobi 0.0567135 seconds.
+  + PCG: Residual after 5 iterations : 9.0739e-05
+  - Time elapsed in project(): 1.75485 seconds.
+  + Advecting velocity field ..
+  - Time elapsed in advectVelocityField(): 0.455239 seconds.
+  + Advecting density field ..
+  - Time elapsed in advectDensityField(): 0.358874 seconds.
+  + Calculating forces ..
+  - Time elapsed in calcForces(): 0.462145 seconds.
+  - Time elapsed in step(): 3.04047 seconds.
+    + Saving "output/density-0003.vol"
+    + Saving "output/screenshot-0003.png"
+FluidSolver: step (0.1) ..
+  - Time elapsed in jacobi 0.0442455 seconds.
+  - Time elapsed in jacobi 0.044474 seconds.
+  - Time elapsed in jacobi 0.0453634 seconds.
+  - Time elapsed in jacobi 0.0431069 seconds.
+  - Time elapsed in jacobi 0.043046 seconds.
+  + PCG: Residual after 4 iterations : 8.26759e-05
+  - Time elapsed in project(): 1.35995 seconds.
+  + Advecting velocity field ..
+  - Time elapsed in advectVelocityField(): 0.500762 seconds.
+  + Advecting density field ..
+  - Time elapsed in advectDensityField(): 0.387798 seconds.
+  + Calculating forces ..
+  - Time elapsed in calcForces(): 0.452919 seconds.
+  - Time elapsed in step(): 2.71043 seconds.
+    + Saving "output/density-0004.vol"
+    + Saving "output/screenshot-0004.png"
+FluidSolver: step (0.1) ..
+  - Time elapsed in jacobi 0.0408573 seconds.
+  - Time elapsed in jacobi 0.0398052 seconds.
+  - Time elapsed in jacobi 0.0408419 seconds.
+  - Time elapsed in jacobi 0.039423 seconds.
+  - Time elapsed in jacobi 0.0398798 seconds.
+  + PCG: Residual after 4 iterations : 7.57038e-05
+  - Time elapsed in project(): 1.29248 seconds.
+  + Advecting velocity field ..
+  - Time elapsed in advectVelocityField(): 0.441347 seconds.
+  + Advecting density field ..
+  - Time elapsed in advectDensityField(): 0.457815 seconds.
+  + Calculating forces ..
+  - Time elapsed in calcForces(): 0.507001 seconds.
+  - Time elapsed in step(): 2.70747 seconds.
+    + Saving "output/density-0005.vol"
+    + Saving "output/screenshot-0005.png"
+FluidSolver: step (0.1) ..
+  - Time elapsed in jacobi 0.0423302 seconds.
+  - Time elapsed in jacobi 0.0414042 seconds.
+  - Time elapsed in jacobi 0.044364 seconds.
+  - Time elapsed in jacobi 0.0413042 seconds.
+  - Time elapsed in jacobi 0.0409675 seconds.
+  + PCG: Residual after 4 iterations : 6.41923e-05
+  - Time elapsed in project(): 1.41339 seconds.
+  + Advecting velocity field ..
+  - Time elapsed in advectVelocityField(): 0.462721 seconds.
+  + Advecting density field ..
+  - Time elapsed in advectDensityField(): 0.380936 seconds.
+  + Calculating forces ..
+  - Time elapsed in calcForces(): 0.462284 seconds.
+  - Time elapsed in step(): 2.72915 seconds.
+    + Saving "output/density-0006.vol"
+    + Saving "output/screenshot-0006.png"
