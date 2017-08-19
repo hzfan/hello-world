@@ -196,6 +196,3 @@ FluidSolver: step (0.1) ..
   - Time elapsed in step(): 2.72915 seconds.
     + Saving "output/density-0006.vol"
     + Saving "output/screenshot-0006.png"
-
-
-changes
